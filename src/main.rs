@@ -10,18 +10,6 @@ fn main() {
     let input_trimmed: i32 = input.trim().parse().expect("Failed to read line");
     let mut rng = rand::rng();
     for _ in 0..input_trimmed {
-        /*let mut num1 = String::new();
-        let mut num2 = String::new();
-        println!("Enter the first number: ");
-        io::stdin()
-            .read_line(&mut num1)
-            .expect("Failed to read line");
-        println!("Enter the second number: ");
-        io::stdin()
-            .read_line(&mut num2)
-            .expect("Failed to read line");
-        let num1_trimmed: i32 = num1.trim().parse().expect("Failed to read line");
-        let num2_trimmed: i32 = num2.trim().parse().expect("Failed to read line");*/
         let num1 = rng.random_range(1..=100);
         let num2 = rng.random_range(1..=100);
         let mut op = String::new();
