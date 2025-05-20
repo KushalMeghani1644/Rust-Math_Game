@@ -1,91 +1,59 @@
 use rand::Rng;
-use std::io;
-fn main() {
-    //Rust code for maths  game
+use std::io::{self, Write};
+
+fn read_input(prompt: &str) -> String {
+    print!("{}", prompt);
+    io::stdout().flush().unwrap();
     let mut input = String::new();
-    println!("Enter how many times the code should run: ");
     io::stdin()
         .read_line(&mut input)
         .expect("Failed to read line");
-    let input_trimmed: i32 = input.trim().parse().expect("Failed to read line");
+    input.trim().to_string()
+}
+
+fn read_number(prompt: &str) -> i32 {
+    loop {
+        let input = read_input(prompt);
+        match input.parse::<i32>() {
+            Ok(num) => return num,
+            Err(_) => println!("Invalid number, please try again!"),
+        }
+    }
+}
+
+fn main() {
+    println!("----MATH-GAME----");
+    let repeat = read_number("Enter how many times the the game should be played: ");
     let mut rng = rand::rng();
-    for _ in 0..input_trimmed {
+    for _ in 0..repeat {
         let num1 = rng.random_range(1..=100);
         let num2 = rng.random_range(1..=100);
-        let mut op = String::new();
-        println!("Enter the operation you want to perform (+,-,*,/): ");
-        io::stdin()
-            .read_line(&mut op)
-            .expect("failed to read line please enter (+,-,*,/)");
-        let op_trimmed = op.trim();
-        match op_trimmed {
-            "+" => {
-                let result = num1 + num2;
-                let mut usr_answer = String::new();
-                println!("What is {} + {} = ?", num1, num2);
-                io::stdin()
-                    .read_line(&mut usr_answer)
-                    .expect("Failed to read line");
-                let usr_answer_trimmed: i32 =
-                    usr_answer.trim().parse().expect("Failed to read line");
-                if usr_answer_trimmed == result {
-                    println!("Correct!");
-                } else {
-                    println!("Incorrect! The correct answer is {}", result);
-                }
-            }
-            "-" => {
-                let result = num1 - num2;
-                let mut usr_answer = String::new();
-                println!("What is {} - {} = ?", num1, num2);
-                io::stdin()
-                    .read_line(&mut usr_answer)
-                    .expect("Failed to read line");
-                let usr_answer_trimmed: i32 =
-                    usr_answer.trim().parse().expect("Failed to read line");
-                if usr_answer_trimmed == result {
-                    println!("Correct!");
-                } else {
-                    println!("Incorrect! The correct answer is {}", result);
-                }
-            }
-            "*" => {
-                let result = num1 * num2;
-                let mut usr_answer = String::new();
-                println!("What is {} * {} = ?", num1, num2);
-                io::stdin()
-                    .read_line(&mut usr_answer)
-                    .expect("Failed to read line");
-                let usr_answer_trimmed: i32 =
-                    usr_answer.trim().parse().expect("Failed to read line");
-                if usr_answer_trimmed == result {
-                    println!("Correct!");
-                } else {
-                    println!("Incorrect! The correct answer is {}", result);
-                }
-            }
+        let op = read_input("Enter the operation you want to perform (+, -, *, /): ");
+        let result = match op.as_str() {
+            "+" => num1 + num2,
+            "-" => num1 - num2,
+            "*" => num1 * num2,
             "/" => {
                 if num2 == 0 {
-                    println!("Cannot divide by zero");
+                    println!("Cannot divide by zero!");
+                    continue;
                 } else {
-                    let result = num1 / num2;
-                    let mut usr_answer = String::new();
-                    println!("What is {} / {} = ?", num1, num2);
-                    io::stdin()
-                        .read_line(&mut usr_answer)
-                        .expect("Failed to read line");
-                    let usr_answer_trimmed: i32 =
-                        usr_answer.trim().parse().expect("Failed to read line");
-                    if usr_answer_trimmed == result {
-                        println!("Correct!");
-                    } else {
-                        println!("Incorrect! The correct answer is {}", result);
-                    }
+                    num1 / num2
                 }
             }
             _ => {
-                println!("Invalid operation");
+                println!("Invalid operation! '{}'. Skipping this round!", op);
+                continue;
             }
+        };
+        let question = format!("what is {} {} {}: ", num1, op, num2);
+        let user_answer = read_number(&question);
+        if user_answer == result {
+            println!("CORRECT!");
+        } else {
+            println!("Incorrect, the answer is: {}", result);
         }
+        println!("----------------------------------");
     }
+    println!("Thanks for playing!");
 }
